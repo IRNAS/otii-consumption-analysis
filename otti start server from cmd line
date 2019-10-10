@@ -1,0 +1,34 @@
+
+Password in arguments:
+otiicli --server --username <username> --password <password> --reserve-time <reserve-time>
+
+Or prompt for password:
+otiicli --server --username <username> --prompt --reserve-time <reserve-time>
+
+
+
+
+Options:
+  -h, --help                         Displays this help.
+  -d, --device <device>              Restrict usage to device
+  -l, --list-devices                 List available devices
+  -n, --no-banner                    Omit the version banner
+  -v, --verbose                      Verbose output
+  -V, --version                      Show application version
+  -L, --license                      Show current license status
+  -u, --username <username>          Username
+  -p, --password <password>          Password
+  -P, --prompt                       Prompt for password
+  -t, --reserve-time <reserve-time>  License reserve time in seconds
+  -r, --return                       Return license when exiting                    <-- THIS
+  -R, --logout                       Return license and logout when exiting         <-- THIS
+  -s, --server                       Start Otii TCP-Server
+
+Arguments:
+  script                             Script to run
+  args                               Optional script arguments
+
+
+Stop server with ctrl-c
+
+TODO: think about how to automate this in Jenkins
