@@ -1,0 +1,14 @@
+{
+    "hostname": "127.0.0.1",
+    "port": 1905,
+    "arc_name": "Arc",
+    "record_duration": 20,
+    "message_pairs": [
+        {
+            "from": "> PING",
+            "to": "> PING 2",
+            "avg_limit_low": 19.6,
+            "avg_limit_high": 19.8
+        }
+    ]
+}
