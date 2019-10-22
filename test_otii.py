@@ -6,9 +6,7 @@ import unittest
 
 from otii_tester_client import OtiiTesterClient
 
-JSON_FILE = "example.json"
-
-# TODO: ali v json file pišemo porabo v Wh ali v μWh ???
+JSON_FILE = None
 
 
 def parse_file(filename):
@@ -43,25 +41,47 @@ class OtiiTest(unittest.TestCase):
                 # analyze the result (msges):
                 ret_val = self.otii_tester.get_energy_consumed_rx(message_pair["from"], message_pair["to"])  # for example
                 if ret_val is not None:
-                    min_consumed, max_consumed, avg_consumed, count_consumed = ret_val
+                    timestamps_begin, timestamps_end, durations, consumptions = ret_val
+
+                    # consumption metrics
+                    min_consumed = min(consumptions)
+                    max_consumed = max(consumptions)
+                    avg_consumed = sum(consumptions) / len(consumptions)
+                    count_consumed = len(consumptions)
+
+                    # duration metrics
+                    min_time = min(durations)
+                    max_time = max(durations)
+                    avg_time = sum(durations) / len(durations)
+
+                    print("Timestamps of begin messages: {}".format(timestamps_begin))
+                    print("Timestamps of end messages: {}".format(timestamps_end))
+                    print("Durations: {}".format(durations))
+                    print("Consumptions: {}".format(consumptions))
+
                     print("MIN CONSUMED = {} μWh".format(min_consumed * 10**6))
                     print("MAX CONSUMED = {} μWh".format(max_consumed * 10**6))
                     print("AVG CONSUMED = {} μWh".format(avg_consumed * 10**6))
                     print("COUNT = {}".format(count_consumed))
 
-                    self.assertLess(avg_consumed, message_pair["avg_limit_high"] * 10**-6, "One interval consumes to much energy")
-                    self.assertGreater(avg_consumed, message_pair["avg_limit_low"] * 10**-6, "One interval consumes to little energy, is everything up and running?")
+                    print("MIN TIME = {} ms".format(min_time))
+                    print("MAX TIME = {} ms".format(max_time))
+                    print("AVG TIME = {} ms".format(avg_time))
+
+                    self.assertLess(max_time, message_pair["timeout"], "Max interval duration is to long")
+                    self.assertLess(avg_consumed, message_pair["avg_limit_high"] * 10**-6, "On average, this consumes to much energy")
+                    self.assertGreater(avg_consumed, message_pair["avg_limit_low"] * 10**-6, "On average, this consumes to little energy")
 
                     # print afer assert that all is good
-                    print("CONSUMPTION OK! (within limits)")
+                    print("CONSUMPTION OK! (within specified limits)")
 
                 else:
-                    print("CONSUMPTION NOT OK! (check bellow)")
+                    print("ERROR IN DATA! (check bellow)")
                     self.fail("Something went wrong in the recording -> Are there enough timestamps?")
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Otii energy consumtopn tester')
+    parser = argparse.ArgumentParser(description='Otii energy consumption analizer')
     parser.add_argument('-f', '--file', required=True, help='Json file with testing instructions')
     args = parser.parse_args()
 

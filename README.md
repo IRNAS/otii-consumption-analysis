@@ -16,7 +16,8 @@ For testing a device, a `json` document must be specified as follows:
             "from": "message begin",
             "to": "message end",
             "avg_limit_low": <LIMIT LOW>,
-            "avg_limit_high": <LIMIT HIGH>
+            "avg_limit_high": <LIMIT HIGH>,
+            "timeout": <TIMEOUT>
         },
         ...
     ]
@@ -30,7 +31,8 @@ For testing a device, a `json` document must be specified as follows:
   - `"from"` is the message where measuring begins
   - `"to"` is the message where measuring ends
   - `"avg_limit_low"` is the lowest amount of energy (in μWh) that can be used up in the specified duration (on average).
-  - `"avg_limit_high"` is the highest amount of energy (in μWh) that can be used up in the specified duration (on average)
+  - `"avg_limit_high"` is the highest amount of energy (in μWh) that can be used up in the specified duration (on average).
+  - `"timeout"` is the highest amount of time (in ms) allowed between messages. If timeout is `0`, the limit is infinite.
 
 Example json:
 
@@ -45,13 +47,15 @@ Example json:
             "from": "fsm(0, 1, 2)",
             "to": "fsm(1, 3, 7)",
             "avg_limit_low": 10,
-            "avg_limit_high": 10.6
+            "avg_limit_high": 10.6,
+            "timeout": 2000
         },
         {
             "from": "> PING",
             "to": "> PING 2",
             "avg_limit_low": 19.6,
-            "avg_limit_high": 19.8
+            "avg_limit_high": 19.8,
+            "timeout": 1770
         }
     ]
 }

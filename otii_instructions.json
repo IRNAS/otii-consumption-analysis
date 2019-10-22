@@ -8,7 +8,8 @@
             "from": "> PING",
             "to": "> PING 2",
             "avg_limit_low": 19.6,
-            "avg_limit_high": 19.8
+            "avg_limit_high": 19.8,
+            "timeout": 2000
         }
     ]
 }

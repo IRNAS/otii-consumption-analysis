@@ -54,7 +54,7 @@ class OtiiTesterClient(object):
         self.arc.set_main(False)
 
     def upload_firmware(self, command):
-        # TODO: will we even use this ever?
+        # TODO: will this be used?
         self.arc.enable_5v(True)  # The switch board is powered by the Otii +5V pin.
 
         # Turn on the main power, and give the device time to startup.
@@ -125,16 +125,18 @@ class OtiiTesterClient(object):
         if timestamps_begin[0] > timestamps_end[0]:
             timestamps_end = timestamps_end[1:]
 
-        print("Timestamps of begin messages: {}".format(timestamps_begin))
-        print("Timestamps of end messages: {}".format(timestamps_end))
+        # print("Timestamps of begin messages: {}".format(timestamps_begin))
+        # print("Timestamps of end messages: {}".format(timestamps_end))
 
         if len(timestamps_begin) == 0 or len(timestamps_end) == 0:
             return None
 
-        max_consumed = -1
-        min_consumed = 9999999  # big number
-        count_consumed = 0
-        avg_consumed = 0
+        # max_consumed = -1
+        # min_consumed = 9999999  # big number
+        # count_consumed = 0
+        # avg_consumed = 0
+        durations = []
+        consumptions = []
 
         for tsb, tse in zip(timestamps_begin, timestamps_end):
             start = recording.get_channel_data_index(self.arc.id, "me", tsb)
@@ -148,15 +150,23 @@ class OtiiTesterClient(object):
             stop_energy = data["values"][0]
             consumed = (stop_energy - start_energy) / 3600
 
-            if consumed > max_consumed:
-                max_consumed = consumed
-            if consumed < min_consumed:
-                min_consumed = consumed
-            count_consumed += 1
-            avg_consumed += consumed
+            consumptions.append(consumed)
 
-        avg_consumed = avg_consumed / count_consumed
-        return (min_consumed, max_consumed, avg_consumed, count_consumed)
+            # if consumed > max_consumed:
+            #     max_consumed = consumed
+            # if consumed < min_consumed:
+            #     min_consumed = consumed
+            # count_consumed += 1
+            # avg_consumed += consumed
+
+            # duration of this consumption
+            durations.append(tsb - tse)
+
+        # print("Durations: {}".format(durations))
+
+        # avg_consumed = avg_consumed / count_consumed
+        # return (min_consumed, max_consumed, avg_consumed, count_consumed)
+        return (timestamps_begin, timestamps_end, durations, consumptions)
 
     def get_energy_consumed_gpi1(self):
         '''Calculates energy consumption between two small pulses over GPI1'''
@@ -169,12 +179,18 @@ class OtiiTesterClient(object):
         if len(timestamps) < 4:  # Need at least two GPI1 pulses
             return None
 
-        max_consumed = -1
-        min_consumed = 9999999  # big number
-        count_consumed = 0
-        avg_consumed = 0
+        timestamps_begin = timestamps[0::2]
+        timestamps_end = timestamps[2::2]
 
-        for tsb, tse in zip(iter(timestamps[0::2]), iter(timestamps[2::2])):
+        durations = []
+        consumptions = []
+
+        # max_consumed = -1
+        # min_consumed = 9999999  # big number
+        # count_consumed = 0
+        # avg_consumed = 0
+
+        for tsb, tse in zip(timestamps_begin, timestamps_end):
             start = recording.get_channel_data_index(self.arc.id, "me", tsb)
             if start > 0:
                 start = start - 1
@@ -186,12 +202,18 @@ class OtiiTesterClient(object):
             stop_energy = data["values"][0]
             consumed = (stop_energy - start_energy) / 3600
 
-            if consumed > max_consumed:
-                max_consumed = consumed
-            if consumed < min_consumed:
-                min_consumed = consumed
-            count_consumed += 1
-            avg_consumed += consumed
+            consumptions.append(consumed)
 
-        avg_consumed = avg_consumed / count_consumed
-        return (min_consumed, max_consumed, avg_consumed, count_consumed)
+            # if consumed > max_consumed:
+            #     max_consumed = consumed
+            # if consumed < min_consumed:
+            #     min_consumed = consumed
+            # count_consumed += 1
+            # avg_consumed += consumed
+
+            durations.append(tsb - tse)
+
+        # avg_consumed = avg_consumed / count_consumed
+        # return (min_consumed, max_consumed, avg_consumed, count_consumed)
+
+        return (timestamps_begin, timestamps_end, durations, consumptions)
