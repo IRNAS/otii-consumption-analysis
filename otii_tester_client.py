@@ -112,8 +112,8 @@ class OtiiTesterClient(object):
         count = recording.get_channel_data_count(self.arc.id, "rx")
         data = recording.get_channel_data(self.arc.id, "rx", index, count)
         values = data["values"]
-        timestamps_begin = [value["timestamp"] for value in values if value["value"] == msg_begin]
-        timestamps_end = [value["timestamp"] for value in values if value["value"] == msg_end]
+        timestamps_begin = [value["timestamp"] for value in values if msg_begin in value["value"]]
+        timestamps_end = [value["timestamp"] for value in values if msg_end in value["value"]]
 
         # if the messages are the same, adjust timestamp arrays
         if msg_begin == msg_end:
