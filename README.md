@@ -1,4 +1,4 @@
-# Otii automatic testing
+# Otii automatic consumption analyzer
 
 The Otti server enables us to write automatic tests for energy consumption.
 We meassure energy consumption between 2 messagess sent from the device via UART.
@@ -64,5 +64,5 @@ Example json:
 To run the tests, simply run:
 
 ```bash
-./test_otii.py -f <JSON FILENAME>
+./otii_analyzer.py -f <JSON FILENAME>
 ```
