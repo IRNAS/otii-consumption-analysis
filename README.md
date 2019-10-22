@@ -5,7 +5,7 @@ We meassure energy consumption between 2 messagess sent from the device via UART
 
 For testing a device, a `json` document must be specified as follows:
 
-```json
+```javascript
 {
     "hostname": "IP",
     "port": <PORT>,
