@@ -68,7 +68,9 @@ class OtiiTest(unittest.TestCase):
                     print("MAX TIME = {} ms".format(max_time))
                     print("AVG TIME = {} ms".format(avg_time))
 
-                    self.assertLess(max_time, message_pair["timeout"], "Max interval duration is to long")
+                    # if timeout = 0, the limit is infinite
+                    if message_pair["timeout"] != 0:
+                        self.assertLess(max_time, message_pair["timeout"], "Max interval duration is to long")
                     self.assertLess(avg_consumed, message_pair["avg_limit_high"] * 10**-6, "On average, this consumes to much energy")
                     self.assertGreater(avg_consumed, message_pair["avg_limit_low"] * 10**-6, "On average, this consumes to little energy")
 
