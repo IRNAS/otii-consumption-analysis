@@ -90,4 +90,6 @@ if __name__ == '__main__':
     JSON_FILE = args.file
 
     # run tests
-    unittest.main(argv=unknown)
+    arg_list = ['first-arg-is-ignored']
+    arg_list.extend(unknown)
+    unittest.main(argv=arg_list)
