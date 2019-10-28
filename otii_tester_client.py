@@ -12,11 +12,11 @@ class OtiiTesterClient(object):
         self.arc_name = arc_name
 
         # initilization
-        self.otii = self.connect_to_otii()
-        self.arc = self.get_otii_arc()
-        self.set_up_arc()  # with default values
+        self.otii = self._connect_to_otii()
+        self.arc = self._get_otii_arc()
+        self._set_up_arc()  # with default values
 
-    def connect_to_otii(self):
+    def _connect_to_otii(self):
         connection = otii_connection.OtiiConnection(self.hostname, self.port)
         connect_response = connection.connect_to_server()
         if connect_response["type"] == "error":
@@ -26,7 +26,7 @@ class OtiiTesterClient(object):
 
         return otii
 
-    def get_otii_arc(self):
+    def _get_otii_arc(self):
         devices = self.otii.get_devices()
         print("Device name: {}".format(devices[0].name))
         if len(devices) == 0:
@@ -40,7 +40,7 @@ class OtiiTesterClient(object):
 
         return arc
 
-    def set_up_arc(self, main_voltage=3.3, exp_voltage=3.3, max_current=0.5, uart_baudrate=115200, enable_uar=True, enable_exp=True, enable_5v=True):
+    def _set_up_arc(self, main_voltage=3.3, exp_voltage=3.3, max_current=0.5, uart_baudrate=115200, enable_uar=True, enable_exp=True, enable_5v=True):
         self.arc.set_main_voltage(3.3)
         self.arc.set_exp_voltage(3.3)
         self.arc.set_max_current(0.5)
@@ -54,6 +54,7 @@ class OtiiTesterClient(object):
         self.arc.set_main(False)
 
     def upload_firmware(self, command):
+        '''Enable upload on Arc and execure shell command for uploading'''
         # TODO: will this be used?
         self.arc.enable_5v(True)  # The switch board is powered by the Otii +5V pin.
 
@@ -78,6 +79,7 @@ class OtiiTesterClient(object):
         self.arc.set_main(False)
 
     def record_data(self, duration=5):
+        '''Records data for specified duration (blocking)'''
         # fetch project data
         self.project = self.otii.get_active_project()
         if not self.project:
@@ -105,8 +107,38 @@ class OtiiTesterClient(object):
         self.arc.set_gpo(2, False)
         self.arc.enable_5v(False)
 
+    def recording_start(self):
+        '''Start data recording'''
+        self.project = self.otii.get_active_project()
+        if not self.project:
+            self.project = self.otii.create_project()
+
+        # turn everything on
+        self.arc.enable_5v(True)
+        self.arc.set_gpo(1, True)
+        self.arc.set_gpo(2, True)
+
+        self.arc.enable_channel("mc", True)
+        self.arc.enable_channel("me", True)
+        self.arc.enable_channel("i1", True)
+        self.arc.enable_channel("rx", True)
+
+        # record the data
+        self.arc.set_main(True)
+        self.project.start_recording()
+
+    def recording_stop(self):
+        '''Stop data recording'''
+        self.project.stop_recording()
+
+        # turn everything off
+        self.arc.set_main(False)
+        self.arc.set_gpo(1, False)
+        self.arc.set_gpo(2, False)
+        self.arc.enable_5v(False)
+
     def get_energy_consumed_rx(self, msg_begin, msg_end):
-        '''Calculates energy consumption between two messages sent'''
+        '''Calculate energy consumption between two messages sent'''
         recording = self.project.get_last_recording()
         index = 0
         count = recording.get_channel_data_count(self.arc.id, "rx")
@@ -125,16 +157,9 @@ class OtiiTesterClient(object):
         if timestamps_begin[0] > timestamps_end[0]:
             timestamps_end = timestamps_end[1:]
 
-        # print("Timestamps of begin messages: {}".format(timestamps_begin))
-        # print("Timestamps of end messages: {}".format(timestamps_end))
-
         if len(timestamps_begin) == 0 or len(timestamps_end) == 0:
             return None
 
-        # max_consumed = -1
-        # min_consumed = 9999999  # big number
-        # count_consumed = 0
-        # avg_consumed = 0
         durations = []
         consumptions = []
 
@@ -151,25 +176,12 @@ class OtiiTesterClient(object):
             consumed = (stop_energy - start_energy) / 3600
 
             consumptions.append(consumed)
-
-            # if consumed > max_consumed:
-            #     max_consumed = consumed
-            # if consumed < min_consumed:
-            #     min_consumed = consumed
-            # count_consumed += 1
-            # avg_consumed += consumed
-
-            # duration of this consumption
             durations.append(tsb - tse)
 
-        # print("Durations: {}".format(durations))
-
-        # avg_consumed = avg_consumed / count_consumed
-        # return (min_consumed, max_consumed, avg_consumed, count_consumed)
         return (timestamps_begin, timestamps_end, durations, consumptions)
 
     def get_energy_consumed_gpi1(self):
-        '''Calculates energy consumption between two small pulses over GPI1'''
+        '''Calculate energy consumption between two small pulses over GPI1'''
         # TODO: test this - do we even use gpi1 pulses in any project?
         recording = self.project.get_last_recording()
         index = 0
@@ -185,11 +197,6 @@ class OtiiTesterClient(object):
         durations = []
         consumptions = []
 
-        # max_consumed = -1
-        # min_consumed = 9999999  # big number
-        # count_consumed = 0
-        # avg_consumed = 0
-
         for tsb, tse in zip(timestamps_begin, timestamps_end):
             start = recording.get_channel_data_index(self.arc.id, "me", tsb)
             if start > 0:
@@ -203,17 +210,6 @@ class OtiiTesterClient(object):
             consumed = (stop_energy - start_energy) / 3600
 
             consumptions.append(consumed)
-
-            # if consumed > max_consumed:
-            #     max_consumed = consumed
-            # if consumed < min_consumed:
-            #     min_consumed = consumed
-            # count_consumed += 1
-            # avg_consumed += consumed
-
             durations.append(tsb - tse)
-
-        # avg_consumed = avg_consumed / count_consumed
-        # return (min_consumed, max_consumed, avg_consumed, count_consumed)
 
         return (timestamps_begin, timestamps_end, durations, consumptions)
