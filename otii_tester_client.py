@@ -176,7 +176,6 @@ class OtiiTesterClient(object):
             consumed = (stop_energy - start_energy) / 3600
 
             consumptions.append(consumed)
-<<<<<<< HEAD
 
             # if consumed > max_consumed:
             #     max_consumed = consumed
@@ -187,9 +186,6 @@ class OtiiTesterClient(object):
 
             # duration of this consumption
             durations.append(abs(tsb - tse))
-=======
-            durations.append(tsb - tse)
->>>>>>> 814d9b9480e4e5941cd861332fe5ee8d2a691ad0
 
         return (timestamps_begin, timestamps_end, durations, consumptions)
 
