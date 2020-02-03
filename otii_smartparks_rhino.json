@@ -1,0 +1,57 @@
+{
+    "hostname": "127.0.0.1",
+    "port": 1905,
+    "arc_name": "Arc",
+    "record_duration": 15,
+    "message_pairs": [
+        {
+            "from": "fsm(0",
+            "to": "fsm(0",
+            "avg_limit_low": 0,
+            "avg_limit_high": 0.05,
+            "timeout": 0
+        },
+        {
+            "from": "fsm(0",
+            "to": "fsm(1>",
+            "avg_limit_low": 0,
+            "avg_limit_high": 20,
+            "timeout": 0
+        },
+        {
+            "from": "fsm(1>",
+            "to": "fsm(2",
+            "avg_limit_low": 0.02,
+            "avg_limit_high": 0.05,
+            "timeout": 0
+        },
+        {
+            "from": "fsm(2",
+            "to": "fsm(3",
+            "avg_limit_low": 0,
+            "avg_limit_high": 0.1,
+            "timeout": 0
+        },
+        {
+            "from": "fsm(3",
+            "to": "fsm(4",
+            "avg_limit_low": 100,
+            "avg_limit_high": 150,
+            "timeout": 8
+        },
+        {
+            "from": "fsm(5",
+            "to": "fsm(6",
+            "avg_limit_low": 0.01,
+            "avg_limit_high": 0.05,
+            "timeout": 0
+        },
+        {
+            "from": "fsm(6",
+            "to": "fsm(5",
+            "avg_limit_low": 10,
+            "avg_limit_high": 12,
+            "timeout": 0
+        }
+    ]
+}

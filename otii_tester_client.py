@@ -85,7 +85,7 @@ class OtiiTesterClient(object):
 
         # turn everything on
         self.arc.enable_5v(True)
-        self.arc.set_gpo(1, True)
+        self.arc.set_gpo(1, False) #disconnect programmer
         self.arc.set_gpo(2, True)
 
         self.arc.enable_channel("mc", True)
@@ -160,7 +160,7 @@ class OtiiTesterClient(object):
             # avg_consumed += consumed
 
             # duration of this consumption
-            durations.append(tsb - tse)
+            durations.append(abs(tsb - tse))
 
         # print("Durations: {}".format(durations))
 
