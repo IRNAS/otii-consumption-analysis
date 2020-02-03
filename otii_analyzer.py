@@ -85,11 +85,11 @@ class OtiiTest(unittest.TestCase):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Otii energy consumption analizer')
     parser.add_argument('-f', '--file', required=True, help='Json file with testing instructions')
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
 
     JSON_FILE = args.file
 
     # run tests
-    suite = unittest.TestSuite()
-    suite.addTest(OtiiTest('test_energy_consumption'))
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    arg_list = ['first-arg-is-ignored']
+    arg_list.extend(unknown)
+    unittest.main(argv=arg_list)
