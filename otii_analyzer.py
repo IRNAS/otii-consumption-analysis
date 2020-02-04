@@ -24,6 +24,7 @@ class OtiiTest(unittest.TestCase):
         cls.json_data = parse_file(JSON_FILE)
 
         cls.otii_tester = OtiiTesterClient(cls.json_data["hostname"], cls.json_data["port"], cls.json_data["arc_name"])
+        cls.otii_tester.upload_firmware("arduino-cli.exe upload -p COM6 --fqbn TleraCorp:stm32l0:B-L072Z-LRWAN1 binary")
 
     @classmethod
     def tearDownClass(cls):
@@ -54,19 +55,19 @@ class OtiiTest(unittest.TestCase):
                     max_time = max(durations)
                     avg_time = sum(durations) / len(durations)
 
-                    print("Timestamps of begin messages: {}".format(timestamps_begin))
-                    print("Timestamps of end messages: {}".format(timestamps_end))
-                    print("Durations: {}".format(durations))
-                    print("Consumptions: {}".format(consumptions))
+                    #print("Timestamps of begin messages: {}".format(timestamps_begin))
+                    #print("Timestamps of end messages: {}".format(timestamps_end))
+                    #print("Durations: {}".format(durations))
+                    #print("Consumptions: {}".format(consumptions))
 
-                    print("MIN CONSUMED = {} μWh".format(min_consumed * 10**6))
-                    print("MAX CONSUMED = {} μWh".format(max_consumed * 10**6))
-                    print("AVG CONSUMED = {} μWh".format(avg_consumed * 10**6))
-                    print("COUNT = {}".format(count_consumed))
+                    #print("MIN CONSUMED = {} μWh".format(min_consumed * 10**6))
+                    #print("MAX CONSUMED = {} μWh".format(max_consumed * 10**6))
+                    print("OK {} μWh".format(avg_consumed * 10**6))
+                    #print("COUNT = {}".format(count_consumed))
 
-                    print("MIN TIME = {} ms".format(min_time))
-                    print("MAX TIME = {} ms".format(max_time))
-                    print("AVG TIME = {} ms".format(avg_time))
+                    #print("MIN TIME = {} ms".format(min_time))
+                    #print("MAX TIME = {} ms".format(max_time))
+                    #print("AVG TIME = {} ms".format(avg_time))
 
                     # if timeout = 0, the limit is infinite
                     if message_pair["timeout"] != 0:
@@ -75,7 +76,7 @@ class OtiiTest(unittest.TestCase):
                     self.assertGreater(avg_consumed, message_pair["avg_limit_low"] * 10**-6, "On average, this consumes to little energy")
 
                     # print afer assert that all is good
-                    print("CONSUMPTION OK! (within specified limits)")
+                    #print("CONSUMPTION OK! (within specified limits)")
 
                 else:
                     print("ERROR IN DATA! (check bellow)")
