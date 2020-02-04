@@ -34,6 +34,10 @@ class OtiiTest(unittest.TestCase):
         # record data
         self.otii_tester.record_data(duration=self.json_data["record_duration"])
 
+        # test for general errors:
+        if get_message_timestamps("ERROR") is not None:
+            self.assertError("ERROR detected")
+
         # one subtest for each message pair
         for message_pair in self.json_data["message_pairs"]:
             with self.subTest(message_pair=message_pair):

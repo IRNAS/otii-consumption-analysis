@@ -137,6 +137,16 @@ class OtiiTesterClient(object):
         self.arc.set_gpo(2, False)
         self.arc.enable_5v(False)
 
+    def get_message_timestamps(self, msg):
+        '''Check if the specified message is present in the recording'''
+        recording = self.project.get_last_recording()
+        index = 0
+        count = recording.get_channel_data_count(self.arc.id, "rx")
+        data = recording.get_channel_data(self.arc.id, "rx", index, count)
+        values = data["values"]
+        timestamps = [value["timestamp"] for value in values if msg in value["value"]]
+        return timestamps
+
     def get_energy_consumed_rx(self, msg_begin, msg_end):
         '''Calculate energy consumption between two messages sent'''
         recording = self.project.get_last_recording()
