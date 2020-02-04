@@ -49,8 +49,8 @@
         {
             "from": "fsm(6",
             "to": "fsm(5",
-            "avg_limit_low": 8,
-            "avg_limit_high": 12,
+            "avg_limit_low": 4,
+            "avg_limit_high": 10,
             "timeout": 0
         }
     ]

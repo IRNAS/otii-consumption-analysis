@@ -64,7 +64,8 @@ class OtiiConnection:
         self.sock.settimeout(3)
         json_data = json.loads((self.sock.recv(self.recv_buffer)).decode("utf-8"))
         if json_data["type"] == "information":
-            print("Info: " + json_data["info"])
+            #print("Info: " + json_data["info"])
+            pass
         return json_data
 
     def receive_response(self, timeout_seconds, trans_id):
@@ -87,7 +88,7 @@ class OtiiConnection:
             try:
                 json_data = json.loads(recv_msg)
                 if json_data["type"] == "information":
-                    print("Info: " + json_data["info"])
+                    #print("Info: " + json_data["info"])
                     recv_msg = ""
                 elif json_data["type"] == "progress":
                     print("Progress on " + json_data["cmd"] + " is " + str(json_data["progress_value"]))

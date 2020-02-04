@@ -28,7 +28,7 @@ class OtiiTesterClient(object):
 
     def _get_otii_arc(self):
         devices = self.otii.get_devices()
-        print("Device name: {}".format(devices[0].name))
+        #print("Device name: {}".format(devices[0].name))
         if len(devices) == 0:
             print("No Arc connected!")
             sys.exit()
@@ -67,7 +67,7 @@ class OtiiTesterClient(object):
         time.sleep(3.0)
 
         # Upload new firmware
-        result = subprocess.call(command, shell=True)
+        result = subprocess.call(command, shell=False, stderr=subprocess.DEVNULL)
         if result != 0:
             print("Failed to upload new firmware")
             sys.exit()

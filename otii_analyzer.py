@@ -35,14 +35,14 @@ class OtiiTest(unittest.TestCase):
         self.otii_tester.record_data(duration=self.json_data["record_duration"])
 
         # test for general errors:
-        if get_message_timestamps("ERROR") is not None:
-            self.assertError("ERROR detected")
+        msg_timestamps=self.otii_tester.get_message_timestamps("ERROR")
+        self.assertFalse(msg_timestamps,"ERROR")
 
         # one subtest for each message pair
         for message_pair in self.json_data["message_pairs"]:
             with self.subTest(message_pair=message_pair):
-                print("---------------------------------")
-                print("FROM \"{}\" TO \"{}\"".format(message_pair["from"], message_pair["to"]))
+                #print("---------------------------------")
+                #print("FROM \"{}\" TO \"{}\"".format(message_pair["from"], message_pair["to"]))
                 # analyze the result (msges):
                 ret_val = self.otii_tester.get_energy_consumed_rx(message_pair["from"], message_pair["to"])  # for example
                 if ret_val is not None:
