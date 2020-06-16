@@ -24,7 +24,7 @@ class OtiiTest(unittest.TestCase):
         cls.json_data = parse_file(JSON_FILE)
 
         cls.otii_tester = OtiiTesterClient(cls.json_data["hostname"], cls.json_data["port"], cls.json_data["arc_name"])
-        cls.otii_tester.upload_firmware("arduino-cli.exe upload -p COM6 --fqbn TleraCorp:stm32l0:B-L072Z-LRWAN1 binary")
+        cls.otii_tester.upload_firmware("arduino-cli.exe upload -p COM7 --fqbn TleraCorp:stm32l0:B-L072Z-LRWAN1 binary")
 
     @classmethod
     def tearDownClass(cls):
@@ -33,6 +33,7 @@ class OtiiTest(unittest.TestCase):
     def test_energy_consumption(self):
         # record data
         self.otii_tester.record_data(duration=self.json_data["record_duration"])
+
 
         # test for general errors:
         msg_timestamps=self.otii_tester.get_message_timestamps("ERROR")

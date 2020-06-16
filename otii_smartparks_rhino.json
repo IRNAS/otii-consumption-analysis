@@ -8,7 +8,7 @@
             "from": "fsm(0",
             "to": "fsm(0",
             "avg_limit_low": 0,
-            "avg_limit_high": 0.05,
+            "avg_limit_high": 0.1,
             "timeout": 0
         },
         {
@@ -22,7 +22,7 @@
             "from": "fsm(1>",
             "to": "fsm(2",
             "avg_limit_low": 0.02,
-            "avg_limit_high": 0.05,
+            "avg_limit_high": 0.07,
             "timeout": 0
         },
         {
@@ -36,7 +36,7 @@
             "from": "fsm(3",
             "to": "fsm(4",
             "avg_limit_low": 100,
-            "avg_limit_high": 150,
+            "avg_limit_high": 170,
             "timeout": 8
         },
         {
@@ -50,7 +50,7 @@
             "from": "fsm(6",
             "to": "fsm(5",
             "avg_limit_low": 4,
-            "avg_limit_high": 10,
+            "avg_limit_high": 12,
             "timeout": 0
         }
     ]

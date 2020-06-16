@@ -76,7 +76,11 @@ class OtiiTesterClient(object):
         # Disable the USB, and turn off the main power
         self.arc.set_gpo(1, False)
         time.sleep(1.0)
+        self.arc.set_main_voltage(0.5)
+        time.sleep(1.0)
         self.arc.set_main(False)
+        self.arc.set_main_voltage(3.3)
+        time.sleep(2.0)
 
     def record_data(self, duration=5):
         '''Records data for specified duration (blocking)'''
@@ -95,9 +99,10 @@ class OtiiTesterClient(object):
         self.arc.enable_channel("i1", True)
         self.arc.enable_channel("rx", True)
 
-        # record the data
-        self.arc.set_main(True)
+        # record the data        
         self.project.start_recording()
+        time.sleep(1.0)
+        self.arc.set_main(True)
         time.sleep(duration)
         self.project.stop_recording()
 
