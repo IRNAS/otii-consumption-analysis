@@ -73,9 +73,9 @@ To run the tests, simply run:
 
 2. Connect otii setup to your computer and run Otii software - open New project.
 
-<img src="Instructions/otii-setup.jpg">
-<img src="Instructions/otii-cables1.jpg">
-<img src="Instructions/otii-cables2.jpg">
+<img src="Instructions/otii-setup.png">
+<img src="Instructions/otii-cables1.png">
+<img src="Instructions/otii-cables2.png">
 
 ```
 otii settings:  new project
